@@ -1,0 +1,8 @@
+name: 'proxy'
+type: 'nodejs:10'
+
+web:
+  commands:
+    start: "npm run start"
+
+disk: 512
