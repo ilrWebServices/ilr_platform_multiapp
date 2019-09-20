@@ -1,0 +1,3 @@
+[submodule "proxy/ilr_proxy-submodule"]
+	path = proxy/ilr_proxy-submodule
+	url = https://github.com/ilrWebServices/ilr_proxy.git
