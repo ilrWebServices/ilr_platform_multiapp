@@ -9,10 +9,6 @@ variables:
     display_errors: Off
     display_startup_errors: Off
 
-dependencies:
-  php:
-    "drush/drush": "^9.0.0"
-
 disk: 2048
 
 # The 'mounts' describe writable, persistent filesystem mounts in the application.
