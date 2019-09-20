@@ -5,4 +5,8 @@ web:
   commands:
     start: "npm run start"
 
+hooks:
+  build: |
+    npm install
+
 disk: 512
