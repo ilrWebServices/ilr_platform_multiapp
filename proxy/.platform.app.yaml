@@ -8,6 +8,6 @@ web:
 hooks:
   build: |
     cd ilr_proxy-submodule
-    npm install
+    npm install --production
 
 disk: 512
