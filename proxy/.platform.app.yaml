@@ -3,10 +3,11 @@ type: 'nodejs:10'
 
 web:
   commands:
-    start: "npm run start"
+    start: "cd ilr_proxy-submodule && npm run start"
 
 hooks:
   build: |
+    cd ilr_proxy-submodule
     npm install
 
 disk: 512
