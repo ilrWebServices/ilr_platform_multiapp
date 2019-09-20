@@ -34,7 +34,7 @@ mounts:
 
 # Configuration of the build of this application.
 build:
-  flavor: composer
+  flavor: none
 
 # The hooks executed at various points in the lifecycle of the application.
 hooks:
@@ -42,6 +42,7 @@ hooks:
     curl -sS https://platform.sh/cli/installer | php
     set -e
     cd ilr-submodule
+    composer --no-dev --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
     npm install
     npm run build
   deploy: |
