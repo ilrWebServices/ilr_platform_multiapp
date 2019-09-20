@@ -13,7 +13,7 @@ disk: 2048
 
 # The 'mounts' describe writable, persistent filesystem mounts in the application.
 mounts:
-  '/web/sites/default/files':
+  '/ilr-submodule/web/sites/default/files':
       source: local
       source_path: 'files'
   '/tmp':
@@ -41,12 +41,13 @@ hooks:
   build: |
     curl -sS https://platform.sh/cli/installer | php
     set -e
+    cd ilr-submodule
     npm install
     npm run build
   deploy: |
     set -e
     php ./drush/platformsh_generate_drush_yml.php
-    cd web
+    cd ilr-submodule/web
     drush -y cache-rebuild
     drush -y updatedb
     drush -y config-import --partial
@@ -54,7 +55,7 @@ hooks:
 web:
   locations:
     '/':
-      root: 'web'
+      root: 'ilr-submodule/web'
 
       # How long to allow static assets from this location to be cached.
       #
@@ -94,7 +95,7 @@ web:
       allow: true
       expires: 5m
       passthru: '/index.php'
-      root: 'web/sites/default/files'
+      root: 'ilr-submodule/web/sites/default/files'
 
       # Do not execute PHP scripts.
       scripts: false
@@ -109,4 +110,4 @@ crons:
   drupal:
     # Run drush cron every hour
     spec: '0 * * * *'
-    cmd: 'cd web ; drush core-cron'
+    cmd: 'cd ilr-submodule/web ; drush core-cron'
