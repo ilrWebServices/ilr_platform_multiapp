@@ -10,4 +10,9 @@ hooks:
     cd ilr_proxy-submodule
     npm install --production
 
+mounts:
+  run:
+    source: local
+    source_path: run
+
 disk: 512
