@@ -1,3 +1,7 @@
 "https://{default}/":
   type: upstream
   upstream: "proxy:http"
+
+"https://d8.{default}/":
+  type: upstream
+  upstream: "drupal8:http"
