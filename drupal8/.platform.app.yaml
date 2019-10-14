@@ -3,13 +3,15 @@ type: 'php:7.2'
 
 relationships:
   database: 'db:mysql'
+  reports: 'db:reporter'
+  drupal7: 'db:migrator'
 
 variables:
   php:
     display_errors: Off
     display_startup_errors: Off
 
-disk: 2048
+disk: 10240
 
 # The 'mounts' describe writable, persistent filesystem mounts in the application.
 mounts:
