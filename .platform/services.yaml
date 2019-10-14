@@ -1,6 +1,6 @@
 db:
   type: mariadb:10.2
-  disk: 2048
+  disk: 4096
   configuration:
     schemas:
       - main
