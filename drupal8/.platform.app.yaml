@@ -53,7 +53,7 @@ hooks:
     cd ilr-submodule/web
     drush -y cache-rebuild
     drush -y updatedb
-    drush -y config-import --partial
+    drush -y config-import
 
 web:
   locations:
