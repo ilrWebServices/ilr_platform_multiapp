@@ -5,6 +5,12 @@
 "https://www.{default}/":
   type: upstream
   upstream: "proxy:http"
+  redirects:
+    expires: 300s
+    paths:
+      '^/(sites/(default|ilr\.cornell\.edu)/files/.*\.pdf)$':
+        to: 'https://archive.{default}/download-lookup?path=$1'
+        regexp: true
 
 "https://d8.{default}/":
   type: upstream
