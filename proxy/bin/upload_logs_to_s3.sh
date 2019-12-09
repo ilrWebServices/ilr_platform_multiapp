@@ -13,7 +13,7 @@ cd $LOGS_TMP_PATH
 TODAY_DATE=$(date +%Y-%m-%d)
 
 # This is the name of the log file for a given day.
-LOG_FILE=${PLATFORM_PROJECT}-${$PLATFORM_APPLICATION_NAME}-${TODAY_DATE}-access.log
+LOG_FILE=${PLATFORM_PROJECT}-${PLATFORM_APPLICATION_NAME}-${TODAY_DATE}-access.log
 
 # Copy the log file from S3.
 aws s3 cp s3://${LOGS_S3_BUCKET}/${LOGS_S3_FOLDER}/${LOG_FILE}.gz ./${LOG_FILE}.gz --quiet
