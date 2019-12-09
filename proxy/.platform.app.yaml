@@ -7,6 +7,10 @@ web:
 
 hooks:
   build: |
+    if [ ! -z "$AWS_ACCESS_KEY_ID" ] && [ ! -z "$AWS_SECRET_ACCESS_KEY" ]; then
+      pip install futures
+      pip install awscli --upgrade --user 2>/dev/null
+    fi
     cd ilr_proxy-submodule
     npm install --production
 
