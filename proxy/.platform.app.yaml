@@ -11,6 +11,7 @@ hooks:
       pip install futures
       pip install awscli --upgrade --user 2>/dev/null
     fi
+    set -e
     cd ilr_proxy-submodule
     npm install --production
 
