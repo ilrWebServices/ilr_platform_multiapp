@@ -14,5 +14,18 @@ mounts:
   run:
     source: local
     source_path: run
+  tmp:
+    source: local
+    source_path: tmp
 
 disk: 512
+
+crons:
+  upload_logs_to_s3:
+    # This is run hourly at 54 minutes after the hour, since platform.sh can
+    # delay cron runs by up to 300 seconds.
+    spec: '54 * * * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+        bash bin/upload_logs_to_s3.sh
+      fi

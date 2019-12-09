@@ -8,3 +8,8 @@
 # gui. This is fine, since it's not really a secret, and recording it here
 # makes configuration clearer.
 export PM2_HOME=/app/run
+
+# Set some non-sensitive log backup variables.
+export LOGS_S3_BUCKET=ilrweb-logs
+export LOGS_S3_FOLDER=platform-logs
+export LOGS_TMP_PATH=/app/tmp
