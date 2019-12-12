@@ -42,10 +42,16 @@ build:
 # The hooks executed at various points in the lifecycle of the application.
 hooks:
   build: |
-    curl -sS https://platform.sh/cli/installer | php
     set -e
+    curl -sS https://platform.sh/cli/installer | php
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | dash
     cd ilr-submodule
     composer --no-dev --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
+    unset NPM_CONFIG_PREFIX
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s .nvmrc ] && nvm install `cat .nvmrc`
+    [ -s .nvmrc ] && nvm use
     npm install
     npm run build
   deploy: |
