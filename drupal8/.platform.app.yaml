@@ -52,8 +52,9 @@ hooks:
     set -e
     cd ilr-submodule/web
     drush -y cache-rebuild
+    drush -y updatedb --no-post-updates
+    drush -y config:import
     drush -y updatedb
-    drush -y config-import
     drush -y cache-rebuild
 
 web:

@@ -1,7 +1,9 @@
 db:
-  type: mariadb:10.2
+  type: mariadb:10.4
   disk: 4096
   configuration:
+    properties:
+      max_allowed_packet: 32
     schemas:
       - main
       - legacy
