@@ -1,5 +1,5 @@
 name: 'drupal8'
-type: 'php:7.2'
+type: 'php:7.3'
 
 relationships:
   database: 'db:mysql'
