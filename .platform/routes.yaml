@@ -21,6 +21,8 @@
 "https://d8-edit.{default}/":
   type: upstream
   upstream: "drupal8:http"
+  cache:
+    enabled: false
 
 "https://archive.{default}/":
   type: upstream
