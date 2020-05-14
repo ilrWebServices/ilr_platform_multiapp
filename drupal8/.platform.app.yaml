@@ -11,8 +11,8 @@ variables:
     display_errors: Off
     display_startup_errors: Off
 
-# 1024 * 15
-disk: 15360
+# 1024 * 14
+disk: 14336
 
 # The 'mounts' describe writable, persistent filesystem mounts in the application.
 mounts:
