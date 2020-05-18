@@ -6,6 +6,10 @@ relationships:
   reports: 'db:reporter'
   drupal7: 'db:migrator'
 
+runtime:
+  extensions:
+    - imagick
+
 variables:
   php:
     display_errors: Off
