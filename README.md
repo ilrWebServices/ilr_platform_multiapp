@@ -31,7 +31,7 @@ $ git submodule update --remote
 
 Then run a `git diff --submodules` to see a list of the new commits in each project. You can use that output in your commit message.
 
-Commit the change to the submodute if the diff looks correct.
+Commit the change to the submodule if the diff looks correct.
 
 # Deployment
 
@@ -66,7 +66,7 @@ If the problem only happens on www.ilr.cornell.edu, the proxy is suspect.
 
 ## Verify the proxy source of a request
 
-If you're not sure which target is serving the current request, you can examine the reponse headers to check the `x-ilr-proxy-source` header.
+If you're not sure which target is serving the current request, you can examine the response headers to check the `x-ilr-proxy-source` header.
 
 You can either use the _Network_ developer tool in any major browser, or a command line tool like `curl`. For example:
 
@@ -87,7 +87,7 @@ x-ilr-proxy-source: <https://d7.ilr.cornell.edu>
 ...
 ```
 
-# Montioring the Proxy
+# Monitoring the Proxy
 
 The proxy runs on a process manager and load balancer called [PM2][].
 
