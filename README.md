@@ -105,6 +105,32 @@ $ platform ssh --app=proxy "ilr_proxy-submodule/node_modules/.bin/pm2 monit"
 
 If you see high memory or CPU usage, the proxy may have an issue. Typically, however, CPU usage should be very low and memory usage hovers around 50 MB. Note that PM2 is configured to restart a service if its memory usage rises above 200 MB.
 
+# Access log monitoring
+
+[GoAccess][] is a handy command line tool for quick web server log analysis. Combined with the [watch command][], you can monitor site usage in near-real-time.
+
+If you're using MacOS, you can install both commands with:
+
+```
+$ brew install watch goaccess
+```
+
+Using `watch`, you can keep a local copy of the access file updated every 30 seconds:
+
+```
+$ watch -n30 rsync -az --progress `platform ssh --app=proxy --environment=master --pipe`:/var/log/access.log ./ & goaccess ./access.log -c
+```
+
+( while true; do rsync -az --progress `platform ssh --app=proxy --environment=master --pipe`:/var/log/access.log ./ && sleep 2; done & goaccess ./access.log -c --num-test=0 )
+
+With that running, run `goaccess` in another terminal to analyze the log file.
+
+```
+$ goaccess ./access.log -c
+```
+
+To clean up, press `q` to quit `goaccess`, then use `fg` to bring the `watch` command to the foreground, and hit `CTRL-c` to stop updating the file. You can then delete `access.log` or leave it around for the next run.
+
 # Uptime Monitoring
 
 We use [Uptime Robot][] to monitor the status of the proxy and the D7 and D8 target hosts. You can see the current status of the sites at:
@@ -118,3 +144,5 @@ The credentials for our Uptime Robot account are stored in the `Shared-ILR passw
 
 [PM2]: https://pm2.keymetrics.io/
 [Uptime Robot]: https://uptimerobot.com/
+[GoAccess]: https://goaccess.io
+[watch command]: https://en.wikipedia.org/wiki/Watch_(Unix)
