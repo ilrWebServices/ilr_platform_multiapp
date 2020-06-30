@@ -24,6 +24,12 @@
   cache:
     enabled: false
 
+"https://execed.{default}/":
+  type: upstream
+  upstream: "drupal8:http"
+  cache:
+    enabled: false
+
 "https://archive.{default}/":
   type: upstream
   upstream: proxy:http
