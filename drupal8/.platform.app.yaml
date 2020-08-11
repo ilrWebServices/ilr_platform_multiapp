@@ -23,6 +23,9 @@ mounts:
   '/ilr-submodule/web/sites/default/files-d8':
       source: local
       source_path: 'files-d8'
+  '/ilr-submodule/private':
+      source: local
+      source_path: 'private'
   '/tmp':
       source: local
       source_path: 'tmp'
