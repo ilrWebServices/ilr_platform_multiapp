@@ -29,9 +29,6 @@ mounts:
   '/tmp':
       source: local
       source_path: 'tmp'
-  '/private':
-      source: local
-      source_path: 'private'
   '/.drush':
       source: local
       source_path: 'drush'
