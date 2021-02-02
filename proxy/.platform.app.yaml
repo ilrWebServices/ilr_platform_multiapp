@@ -1,5 +1,5 @@
 name: 'proxy'
-type: 'nodejs:10'
+type: 'nodejs:14'
 
 web:
   commands:
