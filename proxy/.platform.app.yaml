@@ -1,9 +1,12 @@
 name: 'proxy'
-type: 'nodejs:10'
+type: 'nodejs:14'
 
 web:
   commands:
-    start: "cd ilr_proxy-submodule && npm run start"
+    # This is roughly the same command found in `npm run start`. It's repeated
+    # here because of respawning issues when using `npm run start`. See
+    # https://docs.platform.sh/languages/nodejs.html#configuration
+    start: "/app/ilr_proxy-submodule/node_modules/.bin/pm2 start /app/ilr_proxy-submodule/server.js -i 4 --no-daemon --max-memory-restart 200M --name 'web-proxy'"
 
 hooks:
   build: |
