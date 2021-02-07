@@ -43,6 +43,14 @@ git push platform
 
 Be sure to push your changes to `origin`, too, via `git push origin`. While not essential, it provides a remote backup of the repository outside of our hosting provider.
 
+You can also directly launch this project on Platform.sh using the button below.
+
+<p align="center">
+<a href="https://console.platform.sh/projects/create-project?template=https://github.com/ilrWebServices/ilr_platform_multiapp.git&utm_content=ilr_web_services&utm_source=github&utm_medium=button&utm_campaign=deploy_on_platform">
+    <img src="https://platform.sh/images/deploy/lg-blue.svg" alt="Deploy on Platform.sh" width="180px" />
+</a>
+</p>
+
 # Troubleshooting
 
 If the site is unresponsive or slow, first check to see if the issue is with the proxy or the target hosts behind it.
