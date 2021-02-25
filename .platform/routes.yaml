@@ -5,6 +5,8 @@
 "https://www.{default}/":
   type: upstream
   upstream: "proxy:http"
+  cache:
+    enabled: false
   redirects:
     expires: 300s
     paths:
