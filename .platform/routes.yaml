@@ -43,3 +43,23 @@
   upstream: proxy:http
   cache:
     enabled: false
+
+# Summer debate camp. Further redirects are handled in Drupal.
+"https://summerdebatecamp.cornell.edu":
+  type: upstream
+  upstream: "drupal8:http"
+  cache:
+    enabled: false
+"https://*.summerdebatecamp.cornell.edu/":
+  type: redirect
+  to: https://summerdebatecamp.cornell.edu/
+
+# Legacy Forensics site. Further redirects are handled in Drupal.
+"https://forensics.cornell.edu":
+  type: upstream
+  upstream: "drupal8:http"
+  cache:
+    enabled: false
+"https://*.forensics.cornell.edu/":
+  type: redirect
+  to: https://forensics.cornell.edu/
