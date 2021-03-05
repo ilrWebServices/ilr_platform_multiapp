@@ -63,3 +63,11 @@
 "https://*.forensics.cornell.edu/":
   type: redirect
   to: https://forensics.cornell.edu/
+
+# Legacy speechdebate.cornell.edu site.
+"https://speechdebate.cornell.edu":
+  type: redirect
+  to: https://forensics.cornell.edu/
+"https://*.speechdebate.cornell.edu/":
+  type: redirect
+  to: https://forensics.cornell.edu/
