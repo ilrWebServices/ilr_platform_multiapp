@@ -50,7 +50,7 @@
   upstream: "drupal8:http"
   cache:
     enabled: false
-"https://*.summerdebatecamp.cornell.edu/":
+"http://*.summerdebatecamp.cornell.edu/":
   type: redirect
   to: https://summerdebatecamp.cornell.edu/
 
@@ -60,7 +60,7 @@
   upstream: "drupal8:http"
   cache:
     enabled: false
-"https://*.forensics.cornell.edu/":
+"http://*.forensics.cornell.edu/":
   type: redirect
   to: https://forensics.cornell.edu/
 
@@ -68,6 +68,6 @@
 "https://speechdebate.cornell.edu":
   type: redirect
   to: https://forensics.cornell.edu/
-"https://*.speechdebate.cornell.edu/":
+"http://*.speechdebate.cornell.edu/":
   type: redirect
   to: https://forensics.cornell.edu/
