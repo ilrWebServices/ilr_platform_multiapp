@@ -1,7 +1,7 @@
 - name: 'drupal8'
   type: 'php:7.3'
   source:
-    root: drupal8
+    root: drupal
 
   relationships:
     database: 'db:mysql'
@@ -22,10 +22,10 @@
 
   # The 'mounts' describe writable, persistent filesystem mounts in the application.
   mounts:
-    '/ilr-submodule/web/sites/default/files-d8':
+    '/web/sites/default/files-d8':
         source: local
         source_path: 'files-d8'
-    '/ilr-submodule/private':
+    '/private':
         source: local
         source_path: 'private'
     '/tmp':
@@ -54,13 +54,12 @@
     build: |
       curl -sS https://platform.sh/cli/installer | php
       set -e
-      cd ilr-submodule
       composer --no-dev --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
       npm install
       npm run build
+      echo "IyBTZWUgaHR0cHM6Ly9kb2NzLnBsYXRmb3JtLnNoL2d1aWRlcy9kcnVwYWw5L2RlcGxveS9jdXN0b21pemUuaHRtbCNlbnZpcm9ubWVudAppZiBbIC1uICIkUExBVEZPUk1fQVBQX0RJUiIgLWEgLWYgIiRQTEFURk9STV9BUFBfRElSIi9jb21wb3Nlci5qc29uIF0gOyB0aGVuCiAgYmluPSQoY29tcG9zZXIgY29uZmlnIGJpbi1kaXIgLS13b3JraW5nLWRpcj0iJFBMQVRGT1JNX0FQUF9ESVIiIC0tbm8taW50ZXJhY3Rpb24gMj4vZGV2L251bGwpCiAgZXhwb3J0IFBBVEg9IiR7UExBVEZPUk1fQVBQX0RJUn0vJHtiaW46LXZlbmRvci9iaW59OiR7UEFUSH0iCmZp" | base64 -d - > .environment
     deploy: |
       set -e
-      cd ilr-submodule/web
       drush -y cache-rebuild
       drush -y updatedb --no-post-updates
       drush -y config:import
@@ -70,7 +69,7 @@
   web:
     locations:
       '/':
-        root: 'ilr-submodule/web'
+        root: 'web'
 
         # How long to allow static assets from this location to be cached.
         #
@@ -110,7 +109,7 @@
         allow: true
         expires: 5m
         passthru: '/index.php'
-        root: 'ilr-submodule/web/sites/default/files-d8'
+        root: 'web/sites/default/files-d8'
 
         # Do not execute PHP scripts.
         scripts: false
@@ -125,7 +124,7 @@
     drupal:
       # Run drush cron every hour
       spec: '0 * * * *'
-      cmd: 'cd ilr-submodule/web ; drush core-cron'
+      cmd: 'drush core-cron'
     snapshot:
       # Take a snapshot automatically every night at 6am (UTC). See
       # https://docs.platform.sh/administration/backup-and-restore.html#automated-backups

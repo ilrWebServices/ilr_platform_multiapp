@@ -3,6 +3,6 @@
 	url = https://github.com/ilrWebServices/ilr_proxy.git
 	branch = .
 [submodule "drupal8/ilr-submodule"]
-	path = drupal8/ilr-submodule
+	path = drupal
 	url = https://github.com/ilrWebServices/ilr.git
 	branch = .
