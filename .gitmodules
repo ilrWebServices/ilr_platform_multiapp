@@ -1,5 +1,5 @@
 [submodule "proxy/ilr_proxy-submodule"]
-	path = proxy/ilr_proxy-submodule
+	path = proxy
 	url = https://github.com/ilrWebServices/ilr_proxy.git
 	branch = .
 [submodule "drupal8/ilr-submodule"]
