@@ -1,0 +1,179 @@
+- name: 'drupal8'
+  type: 'php:7.3'
+  source:
+    root: drupal
+
+  relationships:
+    database: 'db:mysql'
+    reports: 'db:reporter'
+    drupal7: 'db:migrator'
+
+  runtime:
+    extensions:
+      - imagick
+
+  variables:
+    php:
+      display_errors: Off
+      display_startup_errors: Off
+
+  # 1024 * 14
+  disk: 14336
+
+  # The 'mounts' describe writable, persistent filesystem mounts in the application.
+  mounts:
+    '/web/sites/default/files-d8':
+        source: local
+        source_path: 'files-d8'
+    '/private':
+        source: local
+        source_path: 'private'
+    '/tmp':
+        source: local
+        source_path: 'tmp'
+    '/.drush':
+        source: local
+        source_path: 'drush'
+    '/drush-backups':
+        source: local
+        source_path: 'drush-backups'
+    '/.console':
+        source: local
+        source_path: 'console'
+
+  # Configuration of the build of this application.
+  build:
+    flavor: none
+
+  dependencies:
+    php:
+      composer/composer: '^2.0'
+
+  # The hooks executed at various points in the lifecycle of the application.
+  hooks:
+    build: |
+      curl -sS https://platform.sh/cli/installer | php
+      set -e
+      composer --no-dev --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
+      npm install
+      npm run build
+      echo "IyBTZWUgaHR0cHM6Ly9kb2NzLnBsYXRmb3JtLnNoL2d1aWRlcy9kcnVwYWw5L2RlcGxveS9jdXN0b21pemUuaHRtbCNlbnZpcm9ubWVudAppZiBbIC1uICIkUExBVEZPUk1fQVBQX0RJUiIgLWEgLWYgIiRQTEFURk9STV9BUFBfRElSIi9jb21wb3Nlci5qc29uIF0gOyB0aGVuCiAgYmluPSQoY29tcG9zZXIgY29uZmlnIGJpbi1kaXIgLS13b3JraW5nLWRpcj0iJFBMQVRGT1JNX0FQUF9ESVIiIC0tbm8taW50ZXJhY3Rpb24gMj4vZGV2L251bGwpCiAgZXhwb3J0IFBBVEg9IiR7UExBVEZPUk1fQVBQX0RJUn0vJHtiaW46LXZlbmRvci9iaW59OiR7UEFUSH0iCmZp" | base64 -d - > .environment
+    deploy: |
+      set -e
+      drush -y cache-rebuild
+      drush -y updatedb --no-post-updates
+      drush -y config:import
+      drush -y updatedb
+      drush -y cache-rebuild
+
+  web:
+    locations:
+      '/':
+        root: 'web'
+
+        # How long to allow static assets from this location to be cached.
+        #
+        # Can be a time in seconds, or -1 for no caching. Times can be
+        # suffixed with "s" (seconds), "m" (minutes), "h" (hours), "d"
+        # (days), "w" (weeks), "M" (months, as 30 days) or "y" (years, as
+        # 365 days).
+        expires: 1d
+
+        # Whether to forward disallowed and missing resources from this
+        # location to the application.
+        #
+        # Can be true, false or a URI path string.
+        passthru: '/index.php'
+
+        # Deny access to static files in this location.
+        allow: false
+
+        # Rules for specific URI patterns.
+        rules:
+          # Allow access to common static files.
+          '(?i)\.(jpe?g|png|gif|svgz?|css|js|map|ico|bmp|eot|woff2?|otf|ttf|pdf|docx?|mp3)$':
+            allow: true
+          '^/robots\.txt$':
+            allow: true
+          '^/sitemap\.xml$':
+            allow: true
+
+          # Deny direct access to configuration files.
+          '^/sites/sites\.php$':
+            scripts: false
+          '^/sites/[^/]+/settings.*?\.php$':
+            scripts: false
+
+      '/sites/default/files-d8':
+        # Allow access to all files in the public files directory.
+        allow: true
+        expires: 5m
+        passthru: '/index.php'
+        root: 'web/sites/default/files-d8'
+
+        # Do not execute PHP scripts.
+        scripts: false
+
+        rules:
+          # Provide a longer TTL (2 weeks) for aggregated CSS and JS files.
+          '^/sites/default/files-d8/(css|js)':
+            expires: 2w
+
+  # The configuration of scheduled execution.
+  crons:
+    drupal:
+      # Run drush cron every hour
+      spec: '0 * * * *'
+      cmd: 'drush core-cron'
+    snapshot:
+      # Take a snapshot automatically every night at 6am (UTC). See
+      # https://docs.platform.sh/administration/backup-and-restore.html#automated-backups
+      # for more info about API tokens and configuration.
+      spec: '0 5 * * *'
+      cmd: |
+        if [ "$PLATFORM_BRANCH" = master ]; then
+          platform snapshot:create --yes --no-wait
+        fi
+- name: 'proxy'
+  type: 'nodejs:14'
+  source:
+    root: proxy
+
+  web:
+    commands:
+      # This is roughly the same command found in `npm run start`. It's repeated
+      # here because of respawning issues when using `npm run start`. See
+      # https://docs.platform.sh/languages/nodejs.html#configuration
+      start: "/app/node_modules/.bin/pm2 start /app/server.js -i 4 --no-daemon --max-memory-restart 200M --name 'web-proxy'"
+
+  hooks:
+    build: |
+      if [ ! -z "$AWS_ACCESS_KEY_ID" ] && [ ! -z "$AWS_SECRET_ACCESS_KEY" ]; then
+        pip install futures
+        pip install awscli --upgrade --user 2>/dev/null
+      fi
+      set -e
+      npm install --production
+      echo "IyBTZXQgdGhlIHBtMiBob21lIGVudmlyb25tZW50IHZhcmlhYmxlIGhlcmUsIHJhdGhlciB0aGFuIGluIHRoZSBwbGF0Zm9ybS5zaAojIGd1aS4gVGhpcyBpcyBmaW5lLCBzaW5jZSBpdCdzIG5vdCByZWFsbHkgYSBzZWNyZXQsIGFuZCByZWNvcmRpbmcgaXQgaGVyZQojIG1ha2VzIGNvbmZpZ3VyYXRpb24gY2xlYXJlci4KZXhwb3J0IFBNMl9IT01FPS9hcHAvcnVuCgojIFNldCBzb21lIG5vbi1zZW5zaXRpdmUgbG9nIGJhY2t1cCB2YXJpYWJsZXMuCmV4cG9ydCBMT0dTX1MzX0JVQ0tFVD1pbHJ3ZWItbG9ncwpleHBvcnQgTE9HU19TM19GT0xERVI9cGxhdGZvcm0tbG9ncwpleHBvcnQgTE9HU19UTVBfUEFUSD0vYXBwL3RtcAo=" | base64 -d - > .environment
+      mkdir bin
+      echo "IyEvdXNyL2Jpbi9lbnYgYmFzaAoKIyBUaGlzIHNjcmlwdCBpcyBpbnRlbmRlZCB0byBydW4gdmlhIGNyb24gb24gcGxhdGZvcm0uc2gKIyBGcm9tIGh0dHBzOi8vZ2l0bGFiLmNvbS9jb250ZXh0dWFsY29kZS9wbGF0Zm9ybXNoLXN0b3JlLWxvZ3MtYXQtczMKCiMgQ29uZmlndXJlZCB2aWEgZW52aXJvbm1lbnQgdmFyaWFibGVzLiBTZW5zaXRpdmUgdmFycyBhcmUgc2V0IG9uIHBsYXRmb3JtOgojIHBsYXRmb3JtIHZhcmlhYmxlOmNyZWF0ZSAtLWxldmVsPXByb2plY3QgLS1uYW1lPUFXU19BQ0NFU1NfS0VZX0lEIC0tdmFsdWU9PEtFWV9JRD4gLS1qc29uPWZhbHNlIC0tc2Vuc2l0aXZlPXRydWUgLS1wcmVmaXg9ZW52IC0tdmlzaWJsZS1idWlsZD10cnVlIC0tdmlzaWJsZS1ydW50aW1lPXRydWUKIyBwbGF0Zm9ybSB2YXJpYWJsZTpjcmVhdGUgLS1sZXZlbD1wcm9qZWN0IC0tbmFtZT1BV1NfU0VDUkVUX0FDQ0VTU19LRVkgLS12YWx1ZT08QUNDRVNTX0tFWT4gLS1qc29uPWZhbHNlIC0tc2Vuc2l0aXZlPXRydWUgLS1wcmVmaXg9ZW52IC0tdmlzaWJsZS1idWlsZD10cnVlIC0tdmlzaWJsZS1ydW50aW1lPXRydWUKCiMgTm9uLXNlbnNpdGl2ZSB2YXJzIGFyZSBzZXQgaW4gLi4vLmVudmlyb25tZW50LgoKY2QgJExPR1NfVE1QX1BBVEgKVE9EQVlfREFURT0kKGRhdGUgKyVZLSVtLSVkKQoKIyBUaGlzIGlzIHRoZSBuYW1lIG9mIHRoZSBsb2cgZmlsZSBmb3IgYSBnaXZlbiBkYXkuCkxPR19GSUxFPSR7UExBVEZPUk1fUFJPSkVDVH0tJHtQTEFURk9STV9BUFBMSUNBVElPTl9OQU1FfS0ke1RPREFZX0RBVEV9LWFjY2Vzcy5sb2cKCiMgQ29weSB0aGUgbG9nIGZpbGUgZnJvbSBTMy4KYXdzIHMzIGNwIHMzOi8vJHtMT0dTX1MzX0JVQ0tFVH0vJHtMT0dTX1MzX0ZPTERFUn0vJHtMT0dfRklMRX0uZ3ogLi8ke0xPR19GSUxFfS5neiAtLXF1aWV0CgojIFVuemlwIHRoZSBsb2cgZmlsZSwgaWYgdGhlcmUgd2FzIG9uZSBzdG9yZWQgb24gUzMgZm9yIHRvZGF5LgppZiBbIC1mIC4vJHtMT0dfRklMRX0uZ3ogXTsgdGhlbgogIGd1bnppcCAuLyR7TE9HX0ZJTEV9CmZpCgojIElmIHRoZXJlIGlzIG5vIGxvZyBmaWxlIGZvciB0b2RheSwgY3JlYXRlIG9uZS4KaWYgWyAhIC1mIC4vJHtMT0dfRklMRX0gXTsgdGhlbgogIHRvdWNoIC4vJHtMT0dfRklMRX0KZmkKCiMgRmlsdGVyIG91dCBsb2cgZW50cmllcyBmb3IgdG9kYXkuCmNhdCAvdmFyL2xvZy9hY2Nlc3MubG9nIHwgZ3JlcCAkKGRhdGUgKyVkLyViLyVZOikgPiAuL3RvZGF5LmxvZwoKIyBHZXQgdGhlIG5ldyBsb2cgZW50cmllcy4KZGlmZiAtLWNoYW5nZWQtZ3JvdXAtZm9ybWF0PSclPicgLS11bmNoYW5nZWQtZ3JvdXAtZm9ybWF0PScnICRMT0dfRklMRSB0b2RheS5sb2cgPiBuZXcubG9nCgojIEFwcGVuZCB0aGUgbmV3IGxvZyBlbnRyaWVzIHRvIHRoZSBsb2cgZmlsZSBmb3IgdG9kYXkuCmNhdCBuZXcubG9nID4+ICRMT0dfRklMRQoKIyBDb21wcmVzcyB0aGUgdXBkYXRlZCBsb2cgZmlsZS4KZ3ppcCAuLyR7TE9HX0ZJTEV9CgojIENvcHkgdGhlIHVwZGF0ZWQsIGNvbXByZXNzZWQgbG9nIGZpbGUgYmFjayB0byBTMy4KYXdzIHMzIGNwIC4vJHtMT0dfRklMRX0uZ3ogczM6Ly8ke0xPR1NfUzNfQlVDS0VUfS8ke0xPR1NfUzNfRk9MREVSfS8ke0xPR19GSUxFfS5neiAtLXF1aWV0CgojIENsZWFuIHVwLgpybSB0b2RheS5sb2cgbmV3LmxvZyAke0xPR19GSUxFfS5nego=" | base64 -d - > bin/upload_logs_to_s3.sh
+
+  mounts:
+    run:
+      source: local
+      source_path: run
+    tmp:
+      source: local
+      source_path: tmp
+
+  disk: 512
+
+  crons:
+    upload_logs_to_s3:
+      # This is run hourly at 54 minutes after the hour, since platform.sh can
+      # delay cron runs by up to 300 seconds.
+      spec: '54 * * * *'
+      cmd: |
+        if [ "$PLATFORM_BRANCH" = master ]; then
+          bash bin/upload_logs_to_s3.sh
+        fi

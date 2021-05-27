@@ -43,6 +43,14 @@ git push platform
 
 Be sure to push your changes to `origin`, too, via `git push origin`. While not essential, it provides a remote backup of the repository outside of our hosting provider.
 
+# Required platform.sh files
+
+Platform.sh documentation recommends that some files, like `.environment` and scripts, be placed in the root directory of an application. Since our proxy and drupal8 applications are running in this multiapp, we try to avoid hosting-specific configuration in their respective repos.
+
+Instead, we add the required files during the build hooks for the applications. To avoid complicated quote escaping, the files are base64 encoded.
+
+The [Encode Decode extension][] for VS Code is useful for editing these embedded files.
+
 # Troubleshooting
 
 If the site is unresponsive or slow, first check to see if the issue is with the proxy or the target hosts behind it.
@@ -117,4 +125,5 @@ The credentials for our Uptime Robot account are stored in the `Shared-ILR passw
 
 
 [PM2]: https://pm2.keymetrics.io/
+[Encode Decode extension]: https://github.com/mitchdenny/ecdc
 [Uptime Robot]: https://uptimerobot.com/
