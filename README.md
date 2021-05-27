@@ -102,13 +102,13 @@ The proxy runs on a process manager and load balancer called [PM2][].
 You can get an overview of the PM2 status with the following command:
 
 ```
-$ platform ssh --app=proxy "ilr_proxy-submodule/node_modules/.bin/pm2 status"
+$ platform ssh --app=proxy "node_modules/.bin/pm2 status"
 ```
 
 To monitor PM2 in real time, use this command:
 
 ```
-$ platform ssh --app=proxy "ilr_proxy-submodule/node_modules/.bin/pm2 monit"
+$ platform ssh --app=proxy "node_modules/.bin/pm2 monit"
 ```
 
 If you see high memory or CPU usage, the proxy may have an issue. Typically, however, CPU usage should be very low and memory usage hovers around 50 MB. Note that PM2 is configured to restart a service if its memory usage rises above 200 MB.
