@@ -53,12 +53,12 @@
   # The hooks executed at various points in the lifecycle of the application.
   hooks:
     build: |
-      curl -sS https://platform.sh/cli/installer | php
       set -e
+      echo "IyBTZWUgaHR0cHM6Ly9kb2NzLnBsYXRmb3JtLnNoL2d1aWRlcy9kcnVwYWw5L2RlcGxveS9jdXN0b21pemUuaHRtbCNlbnZpcm9ubWVudAppZiBbIC1uICIkUExBVEZPUk1fQVBQX0RJUiIgLWEgLWYgIiRQTEFURk9STV9BUFBfRElSIi9jb21wb3Nlci5qc29uIF0gOyB0aGVuCiAgYmluPSQoY29tcG9zZXIgY29uZmlnIGJpbi1kaXIgLS13b3JraW5nLWRpcj0iJFBMQVRGT1JNX0FQUF9ESVIiIC0tbm8taW50ZXJhY3Rpb24gMj4vZGV2L251bGwpCiAgZXhwb3J0IFBBVEg9IiR7UExBVEZPUk1fQVBQX0RJUn0vJHtiaW46LXZlbmRvci9iaW59OiR7UEFUSH0iCmZp" | base64 -d - > .environment
+      curl -sS https://platform.sh/cli/installer | php
       composer --no-dev --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
       npm install
       npm run build
-      echo "IyBTZWUgaHR0cHM6Ly9kb2NzLnBsYXRmb3JtLnNoL2d1aWRlcy9kcnVwYWw5L2RlcGxveS9jdXN0b21pemUuaHRtbCNlbnZpcm9ubWVudAppZiBbIC1uICIkUExBVEZPUk1fQVBQX0RJUiIgLWEgLWYgIiRQTEFURk9STV9BUFBfRElSIi9jb21wb3Nlci5qc29uIF0gOyB0aGVuCiAgYmluPSQoY29tcG9zZXIgY29uZmlnIGJpbi1kaXIgLS13b3JraW5nLWRpcj0iJFBMQVRGT1JNX0FQUF9ESVIiIC0tbm8taW50ZXJhY3Rpb24gMj4vZGV2L251bGwpCiAgZXhwb3J0IFBBVEg9IiR7UExBVEZPUk1fQVBQX0RJUn0vJHtiaW46LXZlbmRvci9iaW59OiR7UEFUSH0iCmZp" | base64 -d - > .environment
     deploy: |
       set -e
       drush -y cache-rebuild
