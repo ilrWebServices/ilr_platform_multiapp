@@ -127,6 +127,16 @@
       # Run drush cron every hour
       spec: '0 * * * *'
       cmd: 'drush core-cron'
+    404-clean:
+      # Clear page not found logs every day
+      spec: '0 6 * * *'
+      cmd: drush watchdog:delete --type='page not found' -y
+    log-truncate:
+      # Clear all other non-essential logs once a month
+      spec: '0 0 1 * *'
+      cmd: |
+        drush watchdog:delete --severity=Info -y
+        drush watchdog:delete --severity=Notice -y
     snapshot:
       # Take a snapshot automatically every night at 6am (UTC). See
       # https://docs.platform.sh/administration/backup-and-restore.html#automated-backups
