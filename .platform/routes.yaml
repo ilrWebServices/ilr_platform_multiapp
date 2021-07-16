@@ -29,6 +29,7 @@
 "https://d8-edit.{default}/":
   type: upstream
   upstream: "drupal8:http"
+  primary: 1
   cache:
     enabled: false
 
