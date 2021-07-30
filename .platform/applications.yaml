@@ -130,6 +130,10 @@
       # Run drush cron every hour
       spec: '0 * * * *'
       cmd: 'drush core-cron'
+    collegenet-import:
+      # Run CollegeNET importer every day at 7:05 and 12:05.
+      spec: '5 7,12 * * *'
+      cmd: 'drush collegenet2sf:run'
     snapshot:
       # Take a snapshot automatically every night at 5am. See
       # https://docs.platform.sh/administration/backup-and-restore.html#automated-backups
