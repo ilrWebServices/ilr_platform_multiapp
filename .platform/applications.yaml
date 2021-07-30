@@ -121,6 +121,9 @@
           '^/sites/default/files-d8/(css|js)':
             expires: 2w
 
+  # Set the timezone for cron jobs.
+  timezone: "America/New_York"
+
   # The configuration of scheduled execution.
   crons:
     drupal:
@@ -128,7 +131,7 @@
       spec: '0 * * * *'
       cmd: 'drush core-cron'
     snapshot:
-      # Take a snapshot automatically every night at 6am (UTC). See
+      # Take a snapshot automatically every night at 5am. See
       # https://docs.platform.sh/administration/backup-and-restore.html#automated-backups
       # for more info about API tokens and configuration.
       spec: '0 5 * * *'
