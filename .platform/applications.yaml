@@ -190,3 +190,9 @@
       # Clear page not found logs every day
       spec: '0 6 * * *'
       cmd: drush watchdog:delete --type='page not found' -y
+    log-truncate:
+      # Clear all other non-essential logs once a month
+      spec: '0 0 1 * *'
+      cmd: |
+        drush watchdog:delete --severity=Info -y
+        drush watchdog:delete --severity=Notice -y
