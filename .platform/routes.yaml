@@ -13,6 +13,9 @@
       '^/(sites/(default|ilr\.cornell\.edu)/files/.*\.pdf)$':
         to: 'https://archive.{default}/download-lookup?path=$1'
         regexp: true
+      '/about-ilr/faculty-and-staff-resources':
+        to: 'https://{default}/faculty-and-staff-resources'
+        code: 301
       '/student-experience':
         to: 'https://{default}/current-students'
         code: 301
