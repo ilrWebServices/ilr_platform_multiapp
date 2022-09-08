@@ -41,6 +41,9 @@
     '/.console':
         source: local
         source_path: 'console'
+    '/data':
+        source: local
+        source_path: 'data'
 
   # Configuration of the build of this application.
   build:
