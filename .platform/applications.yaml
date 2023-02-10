@@ -147,7 +147,7 @@
           platform snapshot:create --yes --no-wait
         fi
 - name: 'proxy'
-  type: 'nodejs:14'
+  type: 'nodejs:18'
   source:
     root: proxy
 
