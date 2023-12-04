@@ -57,6 +57,14 @@
 "http://*.summerdebatecamp.cornell.edu/":
   type: redirect
   to: https://summerdebatecamp.cornell.edu/
+"https://cornelldebate.com":
+  type: upstream
+  upstream: "drupal8:http"
+  cache:
+    enabled: false
+"http://*.cornelldebate.com/":
+  type: redirect
+  to: https://cornelldebate.com/
 
 # Legacy Forensics site. Further redirects are handled in Drupal.
 "https://forensics.cornell.edu":
