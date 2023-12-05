@@ -65,11 +65,7 @@
     deploy: |
       set -e
       curl -sS https://raw.githubusercontent.com/ilrWebServices/platformsh/8fd5d3/platformsh_generate_drush_yml.php | php > ~/.drush/drush.yml
-      drush -y cache-rebuild
-      drush -y updatedb --no-post-updates
-      drush -y config:import
-      drush -y updatedb
-      drush -y cache-rebuild
+      drush deploy
 
   web:
     locations:
