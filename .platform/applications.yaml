@@ -179,6 +179,8 @@
   disk: 512
 
   size: M
+  resources:
+    base_memory: 512
 
   crons:
     upload_logs_to_s3:
