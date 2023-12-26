@@ -21,6 +21,8 @@
   # 1024 * 39.5
   disk: 40448
 
+  size: M
+
   # The 'mounts' describe writable, persistent filesystem mounts in the application.
   mounts:
     '/web/sites/default/files-d8':
@@ -175,6 +177,8 @@
       source_path: tmp
 
   disk: 512
+
+  size: M
 
   crons:
     upload_logs_to_s3:
