@@ -22,6 +22,8 @@
   disk: 40448
 
   size: M
+  resources:
+    base_memory: 768
 
   # The 'mounts' describe writable, persistent filesystem mounts in the application.
   mounts:
@@ -180,7 +182,7 @@
 
   size: M
   resources:
-    base_memory: 512
+    base_memory: 768
 
   crons:
     upload_logs_to_s3:
