@@ -75,3 +75,24 @@
 "http://*.speechdebate.cornell.edu/":
   type: redirect
   to: https://forensics.cornell.edu/
+
+# CAHRS legacy
+"https://cahrs.{default}":
+  # Don't know if this must be 'upstream'.
+  type: redirect
+  to: https://www.{default}/cahrs
+  redirects:
+    paths:
+      '/':
+        to: 'https://www.{default}/cahrs'
+      '^/(.*)':
+        to: 'https://www.{default}/cahrs/$1'
+        regexp: true
+
+# "https://cahrs.{default}":
+#   type: redirect
+#   to: https://www.{default}/cahrs
+
+# "https://cahrs.{default}/Events/Upcoming%20Events.aspx":
+#   type: redirect
+#   to: https://www.{default}/cahrs/events
