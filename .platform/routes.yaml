@@ -75,3 +75,8 @@
 "http://*.speechdebate.cornell.edu/":
   type: redirect
   to: https://forensics.cornell.edu/
+
+# CAHRS legacy hostname redirects.
+"https://cahrs.{default}":
+  type: redirect
+  to: "https://www.{default}/cahrs"
