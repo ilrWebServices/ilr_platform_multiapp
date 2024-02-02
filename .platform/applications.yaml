@@ -18,8 +18,8 @@
       display_errors: Off
       display_startup_errors: Off
 
-  # 1024 * 39.5
-  disk: 40448
+  # 1024 * 38.5
+  disk: 39424
 
   size: M
   resources:
@@ -179,7 +179,7 @@
       source: local
       source_path: tmp
 
-  disk: 512
+  disk: 1024
 
   size: S
   resources:
