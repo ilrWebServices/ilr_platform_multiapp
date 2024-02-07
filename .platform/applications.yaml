@@ -12,6 +12,11 @@
     extensions:
       - imagick
       - apcu
+    # Help platform better calculate the number of PHP-FPM workers available.
+    # See https://docs.platform.sh/languages/php/fpm.html
+    sizing_hints:
+      request_memory: 110
+      reserved_memory: 110
 
   variables:
     php:
