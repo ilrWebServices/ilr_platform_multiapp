@@ -22,3 +22,6 @@ db:
         default_schema: legacy
         privileges:
           legacy: ro
+
+cache:
+  type: redis:7.2

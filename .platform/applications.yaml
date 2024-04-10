@@ -7,11 +7,13 @@
     database: 'db:mysql'
     reports: 'db:reporter'
     drupal7: 'db:migrator'
+    redis: 'cache:redis'
 
   runtime:
     extensions:
       - imagick
       - apcu
+      - redis
     # Help platform better calculate the number of PHP-FPM workers available.
     # See https://docs.platform.sh/languages/php/fpm.html
     sizing_hints:
