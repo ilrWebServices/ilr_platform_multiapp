@@ -26,11 +26,11 @@
   # 1024 * 37.5
   disk: 38400
 
-  size: M
+  size: L
   resources:
     base_memory: 1024
-    memory_ratio: 384
-    # Memory allocation: 1024 + (1 * 384) = 1408
+    memory_ratio: 512
+    # Memory allocation: 1024 + (2 * 512) = 2048
 
   # The 'mounts' describe writable, persistent filesystem mounts in the application.
   mounts:
@@ -180,9 +180,9 @@
 
   size: S
   resources:
-    base_memory: 128
+    base_memory: 768
     memory_ratio: 512
-    # Memory allocation: 128 + (0.5 * 512) = 384
+    # Memory allocation: 768 + (0.5 * 512) = 1024
 
   crons:
     upload_logs_to_s3:
