@@ -83,3 +83,8 @@
 "https://cahrs.{default}":
   type: redirect
   to: "https://www.{default}/cahrs"
+
+# YTI legacy hostname redirects.
+"https://yti.cornell.edu":
+  type: redirect
+  to: "https://www.{default}/yti"
