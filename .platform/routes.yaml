@@ -85,3 +85,6 @@
 "https://yti.cornell.edu":
   type: redirect
   to: "https://www.{default}/yti"
+"https://www.yti.cornell.edu":
+  type: redirect
+  to: "https://www.{default}/yti"
