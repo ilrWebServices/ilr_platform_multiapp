@@ -23,8 +23,8 @@
       display_errors: Off
       display_startup_errors: Off
 
-  # 1024 * 37.5
-  disk: 38400
+  # 1024 * 42.5
+  disk: 43520
 
   size: L
   resources:

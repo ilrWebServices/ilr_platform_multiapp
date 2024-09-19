@@ -1,7 +1,7 @@
 db:
   type: mariadb:10.4
-  # 1024 * 10
-  disk: 10240
+  # 1024 * 15
+  disk: 15360
   configuration:
     properties:
       max_allowed_packet: 32
