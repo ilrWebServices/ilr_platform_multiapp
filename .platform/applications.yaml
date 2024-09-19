@@ -144,6 +144,14 @@
       # Run CollegeNET importer every day at 7:05 and 12:05.
       spec: '5 7,12 * * *'
       cmd: 'drush collegenet2sf:run'
+    database-log-vacuum:
+      # Vacuum the dblog database every day at 11pm.
+      spec: '0 23 * * *'
+      cmd: 'echo "VACUUM;" | sqlite3 /app/data/dblog.sqlite'
+    database-log-cleanup:
+      # Remove all of the 404 errors from watchdog at 10pm on Friday.
+      spec: '0 22 * * 5'
+      cmd: 'echo "delete from watchdog where type = \"page not found\"; VACUUM;" | sqlite3 /app/data/dblog.sqlite'
 - name: 'proxy'
   type: 'nodejs:18'
   source:
