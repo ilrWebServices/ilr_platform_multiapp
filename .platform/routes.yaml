@@ -22,6 +22,14 @@
       '/scheinman-institute/roster-neutrals':
         to: 'https://{default}/scheinman/roster-neutrals'
         code: 301
+      '/institute-workplace-studies':
+        to: 'https://{default}/faculty-and-research/centers-and-institutes'
+        code: 301
+        append_suffix: false
+      '/faculty-and-staff-resources/technology-services':
+        to: 'https://tdx.cornell.edu/TDClient/82/Portal/Home/'
+        code: 301
+        append_suffix: false
 
 # On 2020-04-15 our internal `d8` subdomain was accidentally shared. So it is
 # now a redirect and a new `d8-edit` subdomain has been added.
