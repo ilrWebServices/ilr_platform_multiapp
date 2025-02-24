@@ -19,9 +19,6 @@
       '/student-experience':
         to: 'https://{default}/current-students'
         code: 301
-      '/scheinman-institute/roster-neutrals':
-        to: 'https://{default}/scheinman/roster-neutrals'
-        code: 301
       '/institute-workplace-studies':
         to: 'https://{default}/faculty-and-research/centers-and-institutes'
         code: 301
