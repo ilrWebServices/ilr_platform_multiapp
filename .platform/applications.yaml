@@ -17,6 +17,8 @@
     sizing_hints:
       request_memory: 110
       reserved_memory: 110
+    xdebug:
+      idekey: ILR_WEBTEAM_DEBUG
 
   variables:
     php:
