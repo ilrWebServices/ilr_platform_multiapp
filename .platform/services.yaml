@@ -7,18 +7,11 @@ db:
       max_allowed_packet: 32
     schemas:
       - main
-      - legacy
     endpoints:
       mysql:
         default_schema: main
         privileges:
           main: admin
-          legacy: admin
       reporter:
         privileges:
           main: ro
-          legacy: ro
-      migrator:
-        default_schema: legacy
-        privileges:
-          legacy: ro

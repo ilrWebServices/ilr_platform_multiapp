@@ -6,7 +6,6 @@
   relationships:
     database: 'db:mysql'
     reports: 'db:reporter'
-    drupal7: 'db:migrator'
 
   runtime:
     extensions:
