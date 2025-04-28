@@ -7,9 +7,9 @@ sub vcl_recv {
     # header. This replaces client.identity in other implementations.
     # If a client has exceeded 10 page requests in 15 seconds, block them for
     # 60 seconds.
-    if (req.url !~ "^[^?]*\.(css|gif|ico|jpeg|jpg|js|pdf|png|svg|ttf|txt|webm|webp|woff|woff2|xml)(\?.*)?$" && vsthrottle.is_denied(req.http.X-Client-IP, 10, 15s, 60s)) {
-        return (synth(429, "Too Many Requests"));
-    }
+    # if (req.url !~ "^[^?]*\.(css|gif|ico|jpeg|jpg|js|pdf|png|svg|ttf|txt|webm|webp|woff|woff2|xml)(\?.*)?$" && vsthrottle.is_denied(req.http.X-Client-IP, 10, 15s, 60s)) {
+    #     return (synth(429, "Too Many Requests"));
+    # }
 
     # If a client has exceeded 3 CAHRS resource library requests in 10 seconds,
     # block them for 60 seconds.
