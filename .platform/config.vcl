@@ -17,8 +17,8 @@ sub vcl_recv {
     #     return (synth(429, "Too Many Requests"));
     # }
 
-    # Throttle all requests to the CAHRS resource library to 1 per second.
-    if (req.url ~ "^/cahrs/research-and-insights/resource-library" && vsthrottle.is_denied("/cahrs/research-and-insights/resource-library", 1, 1s)) {
+    # Throttle all requests to the CAHRS resource library to 1 every 10 seconds.
+    if (req.url ~ "^/cahrs/research-and-insights/resource-library" && vsthrottle.is_denied("/cahrs/research-and-insights/resource-library", 1, 10s)) {
         return (synth(429, "Too Many Requests"));
     }
 
