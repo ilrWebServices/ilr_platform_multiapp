@@ -15,3 +15,11 @@ db:
       reporter:
         privileges:
           main: ro
+varnish:
+  type: varnish:7.6
+  relationships:
+    application: 'proxy:http'
+  configuration:
+    vcl: !include
+      type: string
+      path: config.vcl
