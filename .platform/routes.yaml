@@ -49,7 +49,7 @@
 
 "https://archive.{default}/":
   type: upstream
-  upstream: proxy:http
+  upstream: varnish:http
   cache:
     enabled: false
 
