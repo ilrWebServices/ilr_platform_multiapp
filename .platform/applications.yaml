@@ -78,6 +78,7 @@
       set -e
       curl -sS https://raw.githubusercontent.com/ilrWebServices/platformsh/8fd5d3/platformsh_generate_drush_yml.php | php > ~/.drush/drush.yml
       drush deploy
+      drush locale:update
 
   web:
     locations:
