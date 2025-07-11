@@ -1,4 +1,4 @@
-- name: 'drupal8'
+drupal8:
   type: 'php:8.2'
   source:
     root: drupal
@@ -154,39 +154,49 @@
       # Run script to remove old entries from the Grist link log db @ 10pm every Friday.
       spec: '0 22 * * 5'
       cmd: 'php /app/scripts/grist_link_log_purge.php'
-- name: 'proxy'
-  type: 'nodejs:18'
+proxy:
+  type: 'golang:1.23'
   source:
     root: proxy
 
+  variables:
+    env:
+      # Set some non-sensitive log backup variables.
+      LOGS_S3_BUCKET: "ilrweb-logs"
+      LOGS_S3_FOLDER: "platform-logs"
+      LOGS_TMP_PATH: "/app/tmp"
+
   web:
+    upstream:
+      socket_family: tcp
+      protocol: http
     commands:
-      # This is roughly the same command found in `npm run start`. It's repeated
-      # here because of respawning issues when using `npm run start`. See
-      # https://docs.platform.sh/languages/nodejs.html#configuration
-      start: "/app/node_modules/.bin/pm2 start /app/server.js -i 4 --no-daemon --max-memory-restart 200M --name 'web-proxy'"
+      start: ./bin/app
+    locations:
+      /:
+        # Route all requests to the Go proxy app, unconditionally.
+        allow: false
+        passthru: true
 
   hooks:
     build: |
+      set -e
+
+      go build -o bin/app
+
       if [ ! -z "$AWS_ACCESS_KEY_ID" ] && [ ! -z "$AWS_SECRET_ACCESS_KEY" ]; then
         pip install futures
         pip install awscli --upgrade --user 2>/dev/null
       fi
-      set -e
-      npm install --production
-      echo "IyBTZXQgdGhlIHBtMiBob21lIGVudmlyb25tZW50IHZhcmlhYmxlIGhlcmUsIHJhdGhlciB0aGFuIGluIHRoZSBwbGF0Zm9ybS5zaAojIGd1aS4gVGhpcyBpcyBmaW5lLCBzaW5jZSBpdCdzIG5vdCByZWFsbHkgYSBzZWNyZXQsIGFuZCByZWNvcmRpbmcgaXQgaGVyZQojIG1ha2VzIGNvbmZpZ3VyYXRpb24gY2xlYXJlci4KZXhwb3J0IFBNMl9IT01FPS9hcHAvcnVuCgojIFNldCBzb21lIG5vbi1zZW5zaXRpdmUgbG9nIGJhY2t1cCB2YXJpYWJsZXMuCmV4cG9ydCBMT0dTX1MzX0JVQ0tFVD1pbHJ3ZWItbG9ncwpleHBvcnQgTE9HU19TM19GT0xERVI9cGxhdGZvcm0tbG9ncwpleHBvcnQgTE9HU19UTVBfUEFUSD0vYXBwL3RtcAo=" | base64 -d - > .environment
-      mkdir bin
+
       echo "IyEvdXNyL2Jpbi9lbnYgYmFzaAoKIyBUaGlzIHNjcmlwdCBpcyBpbnRlbmRlZCB0byBydW4gdmlhIGNyb24gb24gcGxhdGZvcm0uc2gKIyBGcm9tIGh0dHBzOi8vZ2l0bGFiLmNvbS9jb250ZXh0dWFsY29kZS9wbGF0Zm9ybXNoLXN0b3JlLWxvZ3MtYXQtczMKCiMgQ29uZmlndXJlZCB2aWEgZW52aXJvbm1lbnQgdmFyaWFibGVzLiBTZW5zaXRpdmUgdmFycyBhcmUgc2V0IG9uIHBsYXRmb3JtOgojIHBsYXRmb3JtIHZhcmlhYmxlOmNyZWF0ZSAtLWxldmVsPXByb2plY3QgLS1uYW1lPUFXU19BQ0NFU1NfS0VZX0lEIC0tdmFsdWU9PEtFWV9JRD4gLS1qc29uPWZhbHNlIC0tc2Vuc2l0aXZlPXRydWUgLS1wcmVmaXg9ZW52IC0tdmlzaWJsZS1idWlsZD10cnVlIC0tdmlzaWJsZS1ydW50aW1lPXRydWUKIyBwbGF0Zm9ybSB2YXJpYWJsZTpjcmVhdGUgLS1sZXZlbD1wcm9qZWN0IC0tbmFtZT1BV1NfU0VDUkVUX0FDQ0VTU19LRVkgLS12YWx1ZT08QUNDRVNTX0tFWT4gLS1qc29uPWZhbHNlIC0tc2Vuc2l0aXZlPXRydWUgLS1wcmVmaXg9ZW52IC0tdmlzaWJsZS1idWlsZD10cnVlIC0tdmlzaWJsZS1ydW50aW1lPXRydWUKCiMgTm9uLXNlbnNpdGl2ZSB2YXJzIGFyZSBzZXQgaW4gLi4vLmVudmlyb25tZW50LgoKY2QgJExPR1NfVE1QX1BBVEgKVE9EQVlfREFURT0kKGRhdGUgKyVZLSVtLSVkKQoKIyBUaGlzIGlzIHRoZSBuYW1lIG9mIHRoZSBsb2cgZmlsZSBmb3IgYSBnaXZlbiBkYXkuCkxPR19GSUxFPSR7UExBVEZPUk1fUFJPSkVDVH0tJHtQTEFURk9STV9BUFBMSUNBVElPTl9OQU1FfS0ke1RPREFZX0RBVEV9LWFjY2Vzcy5sb2cKCiMgQ29weSB0aGUgbG9nIGZpbGUgZnJvbSBTMy4KYXdzIHMzIGNwIHMzOi8vJHtMT0dTX1MzX0JVQ0tFVH0vJHtMT0dTX1MzX0ZPTERFUn0vJHtMT0dfRklMRX0uZ3ogLi8ke0xPR19GSUxFfS5neiAtLXF1aWV0CgojIFVuemlwIHRoZSBsb2cgZmlsZSwgaWYgdGhlcmUgd2FzIG9uZSBzdG9yZWQgb24gUzMgZm9yIHRvZGF5LgppZiBbIC1mIC4vJHtMT0dfRklMRX0uZ3ogXTsgdGhlbgogIGd1bnppcCAuLyR7TE9HX0ZJTEV9CmZpCgojIElmIHRoZXJlIGlzIG5vIGxvZyBmaWxlIGZvciB0b2RheSwgY3JlYXRlIG9uZS4KaWYgWyAhIC1mIC4vJHtMT0dfRklMRX0gXTsgdGhlbgogIHRvdWNoIC4vJHtMT0dfRklMRX0KZmkKCiMgRmlsdGVyIG91dCBsb2cgZW50cmllcyBmb3IgdG9kYXkuCmNhdCAvdmFyL2xvZy9hY2Nlc3MubG9nIHwgZ3JlcCAkKGRhdGUgKyVkLyViLyVZOikgPiAuL3RvZGF5LmxvZwoKIyBHZXQgdGhlIG5ldyBsb2cgZW50cmllcy4KZGlmZiAtLWNoYW5nZWQtZ3JvdXAtZm9ybWF0PSclPicgLS11bmNoYW5nZWQtZ3JvdXAtZm9ybWF0PScnICRMT0dfRklMRSB0b2RheS5sb2cgPiBuZXcubG9nCgojIEFwcGVuZCB0aGUgbmV3IGxvZyBlbnRyaWVzIHRvIHRoZSBsb2cgZmlsZSBmb3IgdG9kYXkuCmNhdCBuZXcubG9nID4+ICRMT0dfRklMRQoKIyBDb21wcmVzcyB0aGUgdXBkYXRlZCBsb2cgZmlsZS4KZ3ppcCAuLyR7TE9HX0ZJTEV9CgojIENvcHkgdGhlIHVwZGF0ZWQsIGNvbXByZXNzZWQgbG9nIGZpbGUgYmFjayB0byBTMy4KYXdzIHMzIGNwIC4vJHtMT0dfRklMRX0uZ3ogczM6Ly8ke0xPR1NfUzNfQlVDS0VUfS8ke0xPR1NfUzNfRk9MREVSfS8ke0xPR19GSUxFfS5neiAtLXF1aWV0CgojIENsZWFuIHVwLgpybSB0b2RheS5sb2cgbmV3LmxvZyAke0xPR19GSUxFfS5nego=" | base64 -d - > bin/upload_logs_to_s3.sh
 
   mounts:
-    run:
-      source: local
-      source_path: run
     tmp:
       source: local
       source_path: tmp
 
-  disk: 2048
+  disk: 1024
 
   size: S
   resources:
