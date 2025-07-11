@@ -34,12 +34,11 @@
   type: redirect
   to: https://www.{default}/
 
+# In Summer 2025 we swapped the proxy to default to drupal-latest, so this
+# subhost is retired.
 "https://d8-edit.{default}/":
-  type: upstream
-  upstream: "drupal8:http"
-  primary: 1
-  cache:
-    enabled: false
+  type: redirect
+  to: https://www.{default}/
 
 "https://execed.{default}/":
   type: upstream
