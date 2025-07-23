@@ -22,6 +22,8 @@ sub vcl_recv {
         return (synth(429, "Too Many Requests"));
     }
 
+    # LEGACY DRUPAL PATHS - The content at these paths is still served from our old Drupal site.
+
 	# Note the trailing slash. Without it, Drupal-latest /sites/default/files-d8 will be included, too.
     if (req.url ~ "^/sites/default/files/") {
         set req.backend_hint = legacy_proxy.backend();
@@ -75,12 +77,6 @@ sub vcl_recv {
         set req.backend_hint = legacy_proxy.backend();
     }
     elseif (req.url ~ "^/sitemap.xml") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/student-forms") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/student-forms") {
         set req.backend_hint = legacy_proxy.backend();
     }
 
