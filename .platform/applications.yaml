@@ -105,7 +105,7 @@
         # Rules for specific URI patterns.
         rules:
           # Allow access to common static files.
-          '(?i)\.(jpe?g|png|gif|svgz?|css|js|map|ico|bmp|eot|woff2?|otf|ttf|pdf|docx?|mp3)$':
+          '\.(avif|webp|jpe?g|png|gif|svgz?|css|js|map|ico|bmp|eot|woff2?|otf|ttf|pdf|docx?|mp3)$':
             allow: true
           '^/robots\.txt$':
             allow: true
