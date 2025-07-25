@@ -49,9 +49,6 @@ sub vcl_recv {
     elseif (req.url ~ "^/ilr-review") {
         set req.backend_hint = legacy_proxy.backend();
     }
-    elseif (req.url ~ "^/ilr-press") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
     elseif (req.url ~ "^/conference-center") {
         set req.backend_hint = legacy_proxy.backend();
     }
@@ -64,16 +61,10 @@ sub vcl_recv {
     elseif (req.url ~ "^/eform") {
         set req.backend_hint = legacy_proxy.backend();
     }
-    elseif (req.url ~ "^/faculty-and-staff-resources") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
     elseif (req.url ~ "^/misc") {
         set req.backend_hint = legacy_proxy.backend();
     }
     elseif (req.url ~ "^/mobilizing-against-inequality") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/privacy-policy") {
         set req.backend_hint = legacy_proxy.backend();
     }
     elseif (req.url ~ "^/sitemap.xml") {
