@@ -67,6 +67,10 @@ sub vcl_recv {
     elseif (req.url ~ "^/mobilizing-against-inequality") {
         set req.backend_hint = legacy_proxy.backend();
     }
+    # These are links to archive.ilr.cornell.edu, so should be handled by D7.
+    elseif (req.url ~ "^/download/") {
+        set req.backend_hint = legacy_proxy.backend();
+    }
     elseif (req.url ~ "^/sitemap.xml") {
         set req.backend_hint = legacy_proxy.backend();
     }
