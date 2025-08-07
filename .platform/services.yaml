@@ -1,5 +1,5 @@
 db:
-  type: mariadb:10.4
+  type: mariadb:10.6
   # 1024 * 15
   disk: 15360
   configuration:
