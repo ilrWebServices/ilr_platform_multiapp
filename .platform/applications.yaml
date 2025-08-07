@@ -1,5 +1,5 @@
 drupal8:
-  type: 'php:8.2'
+  type: 'php:8.3'
   source:
     root: drupal
 
