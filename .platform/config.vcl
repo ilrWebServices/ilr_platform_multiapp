@@ -49,12 +49,6 @@ sub vcl_recv {
     elseif (req.url ~ "^/ilr-review") {
         set req.backend_hint = legacy_proxy.backend();
     }
-    elseif (req.url ~ "^/conference-center") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/centers-institutes/conference-center-nyc") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
     elseif (req.url ~ "^/nyc-conference-center") {
         set req.backend_hint = legacy_proxy.backend();
     }
