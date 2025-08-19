@@ -11,6 +11,7 @@ drupal8:
     extensions:
       - imagick
       - apcu
+      - sodium
     # Help platform better calculate the number of PHP-FPM workers available.
     # See https://docs.platform.sh/languages/php/fpm.html
     sizing_hints:
