@@ -3,13 +3,13 @@ import vsthrottle;
 sub vcl_recv {
     set req.backend_hint = drupal.backend();
 
+    # If a client has exceeded 5 requests per second for non-static assets, 
+    # block them for 30 seconds.
     # The Platform.sh router provides the real client IP as the `X-Client-IP`
     # header. This replaces client.identity in other implementations.
-    # If a client has exceeded 10 page requests in 15 seconds, block them for
-    # 60 seconds.
-    # if (req.url !~ "^[^?]*\.(css|gif|ico|jpeg|jpg|js|pdf|png|svg|ttf|txt|webm|webp|woff|woff2|xml)(\?.*)?$" && vsthrottle.is_denied(req.http.X-Client-IP, 10, 15s, 60s)) {
-    #     return (synth(429, "Too Many Requests"));
-    # }
+    if (req.url !~ "(?i)^[^?]*\.(css|gif|ico|jpe?g|js|pdf|png|svgz?|ttf|txt|webm|webp|woff2?)(\?.*)?$" && vsthrottle.is_denied(req.http.X-Client-IP, 5, 1s, 30s)) {
+        return (synth(429, "Too Many Requests"));
+    }
 
     # If a client has exceeded 3 CAHRS resource library requests in 10 seconds,
     # block them for 60 seconds.
