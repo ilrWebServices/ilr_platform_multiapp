@@ -22,6 +22,16 @@ sub vcl_recv {
         return (synth(429, "Too Many Requests"));
     }
 
+    # Intercept known attack vector URLs before the main Drupal app.
+    if (req.url ~ "^/wp-"
+        || req.url ~ "^/Documents\$"
+        || req.url ~ "^/Managed\$"
+        || req.url ~ "^/\.env"
+        || req.url ~ "^/api/server/version"
+    ) {
+        return(synth(404));
+    }
+
     # LEGACY DRUPAL PATHS - The content at these paths is still served from our old Drupal site.
 
 	# Note the trailing slash. Without it, Drupal-latest /sites/default/files-d8 will be included, too.
