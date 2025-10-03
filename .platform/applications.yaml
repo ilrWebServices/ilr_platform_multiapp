@@ -24,6 +24,8 @@ drupal8:
     php:
       display_errors: Off
       display_startup_errors: Off
+      upload_max_filesize: 128M
+      post_max_size: 128M
 
   # 1024 * 42.5
   disk: 43520
