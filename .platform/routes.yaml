@@ -64,6 +64,10 @@
   cache:
     enabled: false
 
+"https://brand.{default}/":
+  type: redirect
+  to: https://www.{default}/brand
+
 # Summer debate camp. Further redirects are handled in Drupal.
 "https://summerdebatecamp.cornell.edu":
   type: upstream
