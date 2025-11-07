@@ -1,5 +1,5 @@
 db:
-  type: mariadb:10.4
+  type: mariadb:10.6
   # 1024 * 15
   disk: 15360
   configuration:
@@ -18,7 +18,8 @@ db:
 varnish:
   type: varnish:7.6
   relationships:
-    application: 'proxy:http'
+    drupal: 'drupal8:http'
+    legacy_proxy: 'proxy:http'
   configuration:
     vcl: !include
       type: string

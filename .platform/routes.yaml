@@ -27,6 +27,18 @@
         to: 'https://tdx.cornell.edu/TDClient/82/Portal/Home/'
         code: 301
         append_suffix: false
+      '/faculty-and-staff-resources':
+        to: 'https://{default}/faculty-staff-resources'
+        code: 301
+        append_suffix: false
+      '/scheinman/roster-neutrals':
+        to: 'https://{default}/scheinman-institute/roster-neutrals'
+        code: 301
+        append_suffix: false
+      '/conference-center':
+        to: 'https://{default}/nyc-conference-center'
+        code: 301
+        append_suffix: false
 
 # On 2020-04-15 our internal `d8` subdomain was accidentally shared. So it is
 # now a redirect and a new `d8-edit` subdomain has been added.
@@ -34,12 +46,11 @@
   type: redirect
   to: https://www.{default}/
 
+# In Summer 2025 we swapped the proxy to default to drupal-latest, so this
+# subhost is retired.
 "https://d8-edit.{default}/":
-  type: upstream
-  upstream: "drupal8:http"
-  primary: 1
-  cache:
-    enabled: false
+  type: redirect
+  to: https://www.{default}/
 
 "https://execed.{default}/":
   type: upstream
@@ -52,6 +63,10 @@
   upstream: varnish:http
   cache:
     enabled: false
+
+"https://brand.{default}/":
+  type: redirect
+  to: https://www.{default}/brand
 
 # Summer debate camp. Further redirects are handled in Drupal.
 "https://summerdebatecamp.cornell.edu":
