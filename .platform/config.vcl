@@ -3,6 +3,12 @@ import vsthrottle;
 sub vcl_recv {
     set req.backend_hint = drupal.backend();
 
+    # Block IP addresses with an abuse score of 10 or more.
+    # @see https://fixed.docs.upsun.com/development/headers.html#classification-data-headers
+    if ( std.integer(req.http.Client-Abuse-Score, 0) >= 10 ) {
+        return (synth(403, "Forbidden"));
+    }
+
     # The Platform.sh router provides the real client IP as the `X-Client-IP`
     # header. This replaces client.identity in other implementations.
     # If a client has exceeded 10 page requests in 15 seconds, block them for
@@ -54,9 +60,6 @@ sub vcl_recv {
         set req.backend_hint = legacy_proxy.backend();
     }
     elseif (req.url ~ "^/sites/all/themes") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/ilr-review") {
         set req.backend_hint = legacy_proxy.backend();
     }
     elseif (req.url ~ "^/nyc-conference-center") {
