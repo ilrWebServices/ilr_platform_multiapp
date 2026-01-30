@@ -62,9 +62,6 @@ sub vcl_recv {
     elseif (req.url ~ "^/sites/all/themes") {
         set req.backend_hint = legacy_proxy.backend();
     }
-    elseif (req.url ~ "^/nyc-conference-center") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
     elseif (req.url ~ "^/eform") {
         set req.backend_hint = legacy_proxy.backend();
     }
