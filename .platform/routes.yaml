@@ -35,10 +35,6 @@
         to: 'https://{default}/scheinman-institute/roster-neutrals'
         code: 301
         append_suffix: false
-      '/conference-center':
-        to: 'https://{default}/nyc-conference-center'
-        code: 301
-        append_suffix: false
 
 # On 2020-04-15 our internal `d8` subdomain was accidentally shared. So it is
 # now a redirect and a new `d8-edit` subdomain has been added.
