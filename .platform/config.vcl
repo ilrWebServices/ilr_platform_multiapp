@@ -38,51 +38,6 @@ sub vcl_recv {
         return(synth(404));
     }
 
-    # LEGACY DRUPAL PATHS - The content at these paths is still served from our old Drupal site.
-
-	# Note the trailing slash. Without it, Drupal-latest /sites/default/files-d8 will be included, too.
-    if (req.url ~ "^/sites/default/files/") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/modules/node") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/modules/system") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/modules/user") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/sites/all/libraries") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/sites/all/modules") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/sites/all/themes") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/eform") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/misc") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/mobilizing-against-inequality") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    # These are links to archive.ilr.cornell.edu, so should be handled by D7.
-    elseif (req.url ~ "^/download/") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    # These are links to archive.ilr.cornell.edu, so should be handled by D7.
-    elseif (req.url ~ "^/download-lookup") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-    elseif (req.url ~ "^/sitemap.xml") {
-        set req.backend_hint = legacy_proxy.backend();
-    }
-
     # Bypass the cache. We'll enable it later, when we've configured the Purge module for Drupal.
     return (pass);
 }

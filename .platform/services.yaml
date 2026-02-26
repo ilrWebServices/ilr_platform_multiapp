@@ -19,7 +19,6 @@ varnish:
   type: varnish:7.6
   relationships:
     drupal: 'drupal8:http'
-    legacy_proxy: 'proxy:http'
   configuration:
     vcl: !include
       type: string
