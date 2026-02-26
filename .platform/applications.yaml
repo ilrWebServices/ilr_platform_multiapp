@@ -26,6 +26,11 @@ drupal8:
       display_startup_errors: Off
       upload_max_filesize: 128M
       post_max_size: 128M
+    env:
+      # Set some non-sensitive log backup variables.
+      LOGS_S3_BUCKET: "ilrweb-logs"
+      LOGS_S3_FOLDER: "platform-logs"
+      LOGS_TMP_PATH: "/app/tmp"
 
   # 1024 * 42.5
   disk: 43520
@@ -77,6 +82,13 @@ drupal8:
       composer --no-dev --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
       npm install
       npm run build
+
+      if [ ! -z "$AWS_ACCESS_KEY_ID" ] && [ ! -z "$AWS_SECRET_ACCESS_KEY" ]; then
+        pip install futures
+        pip install awscli --upgrade --user 2>/dev/null
+      fi
+
+      echo "IyEvdXNyL2Jpbi9lbnYgYmFzaAoKIyBUaGlzIHNjcmlwdCBpcyBpbnRlbmRlZCB0byBydW4gdmlhIGNyb24gb24gcGxhdGZvcm0uc2gKIyBGcm9tIGh0dHBzOi8vZ2l0bGFiLmNvbS9jb250ZXh0dWFsY29kZS9wbGF0Zm9ybXNoLXN0b3JlLWxvZ3MtYXQtczMKCiMgQ29uZmlndXJlZCB2aWEgZW52aXJvbm1lbnQgdmFyaWFibGVzLiBTZW5zaXRpdmUgdmFycyBhcmUgc2V0IG9uIHBsYXRmb3JtOgojIHBsYXRmb3JtIHZhcmlhYmxlOmNyZWF0ZSAtLWxldmVsPXByb2plY3QgLS1uYW1lPUFXU19BQ0NFU1NfS0VZX0lEIC0tdmFsdWU9PEtFWV9JRD4gLS1qc29uPWZhbHNlIC0tc2Vuc2l0aXZlPXRydWUgLS1wcmVmaXg9ZW52IC0tdmlzaWJsZS1idWlsZD10cnVlIC0tdmlzaWJsZS1ydW50aW1lPXRydWUKIyBwbGF0Zm9ybSB2YXJpYWJsZTpjcmVhdGUgLS1sZXZlbD1wcm9qZWN0IC0tbmFtZT1BV1NfU0VDUkVUX0FDQ0VTU19LRVkgLS12YWx1ZT08QUNDRVNTX0tFWT4gLS1qc29uPWZhbHNlIC0tc2Vuc2l0aXZlPXRydWUgLS1wcmVmaXg9ZW52IC0tdmlzaWJsZS1idWlsZD10cnVlIC0tdmlzaWJsZS1ydW50aW1lPXRydWUKCiMgTm9uLXNlbnNpdGl2ZSB2YXJzIGFyZSBzZXQgaW4gLi4vLmVudmlyb25tZW50LgoKY2QgJExPR1NfVE1QX1BBVEgKVE9EQVlfREFURT0kKGRhdGUgKyVZLSVtLSVkKQoKIyBUaGlzIGlzIHRoZSBuYW1lIG9mIHRoZSBsb2cgZmlsZSBmb3IgYSBnaXZlbiBkYXkuCkxPR19GSUxFPSR7UExBVEZPUk1fUFJPSkVDVH0tJHtQTEFURk9STV9BUFBMSUNBVElPTl9OQU1FfS0ke1RPREFZX0RBVEV9LWFjY2Vzcy5sb2cKCiMgQ29weSB0aGUgbG9nIGZpbGUgZnJvbSBTMy4KYXdzIHMzIGNwIHMzOi8vJHtMT0dTX1MzX0JVQ0tFVH0vJHtMT0dTX1MzX0ZPTERFUn0vJHtMT0dfRklMRX0uZ3ogLi8ke0xPR19GSUxFfS5neiAtLXF1aWV0CgojIFVuemlwIHRoZSBsb2cgZmlsZSwgaWYgdGhlcmUgd2FzIG9uZSBzdG9yZWQgb24gUzMgZm9yIHRvZGF5LgppZiBbIC1mIC4vJHtMT0dfRklMRX0uZ3ogXTsgdGhlbgogIGd1bnppcCAuLyR7TE9HX0ZJTEV9CmZpCgojIElmIHRoZXJlIGlzIG5vIGxvZyBmaWxlIGZvciB0b2RheSwgY3JlYXRlIG9uZS4KaWYgWyAhIC1mIC4vJHtMT0dfRklMRX0gXTsgdGhlbgogIHRvdWNoIC4vJHtMT0dfRklMRX0KZmkKCiMgRmlsdGVyIG91dCBsb2cgZW50cmllcyBmb3IgdG9kYXkuCmNhdCAvdmFyL2xvZy9hY2Nlc3MubG9nIHwgZ3JlcCAkKGRhdGUgKyVkLyViLyVZOikgPiAuL3RvZGF5LmxvZwoKIyBHZXQgdGhlIG5ldyBsb2cgZW50cmllcy4KZGlmZiAtLWNoYW5nZWQtZ3JvdXAtZm9ybWF0PSclPicgLS11bmNoYW5nZWQtZ3JvdXAtZm9ybWF0PScnICRMT0dfRklMRSB0b2RheS5sb2cgPiBuZXcubG9nCgojIEFwcGVuZCB0aGUgbmV3IGxvZyBlbnRyaWVzIHRvIHRoZSBsb2cgZmlsZSBmb3IgdG9kYXkuCmNhdCBuZXcubG9nID4+ICRMT0dfRklMRQoKIyBDb21wcmVzcyB0aGUgdXBkYXRlZCBsb2cgZmlsZS4KZ3ppcCAuLyR7TE9HX0ZJTEV9CgojIENvcHkgdGhlIHVwZGF0ZWQsIGNvbXByZXNzZWQgbG9nIGZpbGUgYmFjayB0byBTMy4KYXdzIHMzIGNwIC4vJHtMT0dfRklMRX0uZ3ogczM6Ly8ke0xPR1NfUzNfQlVDS0VUfS8ke0xPR1NfUzNfRk9MREVSfS8ke0xPR19GSUxFfS5neiAtLXF1aWV0CgojIENsZWFuIHVwLgpybSB0b2RheS5sb2cgbmV3LmxvZyAke0xPR19GSUxFfS5nego=" | base64 -d - > bin/upload_logs_to_s3.sh
     deploy: |
       set -e
       curl -sS https://raw.githubusercontent.com/ilrWebServices/platformsh/8fd5d3/platformsh_generate_drush_yml.php | php > ~/.drush/drush.yml
@@ -157,57 +169,6 @@ drupal8:
       # Run script to remove old entries from the Grist link log db @ 10pm every Friday.
       spec: '0 22 * * 5'
       cmd: 'php /app/scripts/grist_link_log_purge.php'
-proxy:
-  type: 'golang:1.23'
-  source:
-    root: proxy
-
-  variables:
-    env:
-      # Set some non-sensitive log backup variables.
-      LOGS_S3_BUCKET: "ilrweb-logs"
-      LOGS_S3_FOLDER: "platform-logs"
-      LOGS_TMP_PATH: "/app/tmp"
-
-  web:
-    upstream:
-      socket_family: tcp
-      protocol: http
-    commands:
-      start: ./bin/app
-    locations:
-      /:
-        # Route all requests to the Go proxy app, unconditionally.
-        allow: false
-        passthru: true
-
-  hooks:
-    build: |
-      set -e
-
-      go build -o bin/app
-
-      if [ ! -z "$AWS_ACCESS_KEY_ID" ] && [ ! -z "$AWS_SECRET_ACCESS_KEY" ]; then
-        pip install futures
-        pip install awscli --upgrade --user 2>/dev/null
-      fi
-
-      echo "IyEvdXNyL2Jpbi9lbnYgYmFzaAoKIyBUaGlzIHNjcmlwdCBpcyBpbnRlbmRlZCB0byBydW4gdmlhIGNyb24gb24gcGxhdGZvcm0uc2gKIyBGcm9tIGh0dHBzOi8vZ2l0bGFiLmNvbS9jb250ZXh0dWFsY29kZS9wbGF0Zm9ybXNoLXN0b3JlLWxvZ3MtYXQtczMKCiMgQ29uZmlndXJlZCB2aWEgZW52aXJvbm1lbnQgdmFyaWFibGVzLiBTZW5zaXRpdmUgdmFycyBhcmUgc2V0IG9uIHBsYXRmb3JtOgojIHBsYXRmb3JtIHZhcmlhYmxlOmNyZWF0ZSAtLWxldmVsPXByb2plY3QgLS1uYW1lPUFXU19BQ0NFU1NfS0VZX0lEIC0tdmFsdWU9PEtFWV9JRD4gLS1qc29uPWZhbHNlIC0tc2Vuc2l0aXZlPXRydWUgLS1wcmVmaXg9ZW52IC0tdmlzaWJsZS1idWlsZD10cnVlIC0tdmlzaWJsZS1ydW50aW1lPXRydWUKIyBwbGF0Zm9ybSB2YXJpYWJsZTpjcmVhdGUgLS1sZXZlbD1wcm9qZWN0IC0tbmFtZT1BV1NfU0VDUkVUX0FDQ0VTU19LRVkgLS12YWx1ZT08QUNDRVNTX0tFWT4gLS1qc29uPWZhbHNlIC0tc2Vuc2l0aXZlPXRydWUgLS1wcmVmaXg9ZW52IC0tdmlzaWJsZS1idWlsZD10cnVlIC0tdmlzaWJsZS1ydW50aW1lPXRydWUKCiMgTm9uLXNlbnNpdGl2ZSB2YXJzIGFyZSBzZXQgaW4gLi4vLmVudmlyb25tZW50LgoKY2QgJExPR1NfVE1QX1BBVEgKVE9EQVlfREFURT0kKGRhdGUgKyVZLSVtLSVkKQoKIyBUaGlzIGlzIHRoZSBuYW1lIG9mIHRoZSBsb2cgZmlsZSBmb3IgYSBnaXZlbiBkYXkuCkxPR19GSUxFPSR7UExBVEZPUk1fUFJPSkVDVH0tJHtQTEFURk9STV9BUFBMSUNBVElPTl9OQU1FfS0ke1RPREFZX0RBVEV9LWFjY2Vzcy5sb2cKCiMgQ29weSB0aGUgbG9nIGZpbGUgZnJvbSBTMy4KYXdzIHMzIGNwIHMzOi8vJHtMT0dTX1MzX0JVQ0tFVH0vJHtMT0dTX1MzX0ZPTERFUn0vJHtMT0dfRklMRX0uZ3ogLi8ke0xPR19GSUxFfS5neiAtLXF1aWV0CgojIFVuemlwIHRoZSBsb2cgZmlsZSwgaWYgdGhlcmUgd2FzIG9uZSBzdG9yZWQgb24gUzMgZm9yIHRvZGF5LgppZiBbIC1mIC4vJHtMT0dfRklMRX0uZ3ogXTsgdGhlbgogIGd1bnppcCAuLyR7TE9HX0ZJTEV9CmZpCgojIElmIHRoZXJlIGlzIG5vIGxvZyBmaWxlIGZvciB0b2RheSwgY3JlYXRlIG9uZS4KaWYgWyAhIC1mIC4vJHtMT0dfRklMRX0gXTsgdGhlbgogIHRvdWNoIC4vJHtMT0dfRklMRX0KZmkKCiMgRmlsdGVyIG91dCBsb2cgZW50cmllcyBmb3IgdG9kYXkuCmNhdCAvdmFyL2xvZy9hY2Nlc3MubG9nIHwgZ3JlcCAkKGRhdGUgKyVkLyViLyVZOikgPiAuL3RvZGF5LmxvZwoKIyBHZXQgdGhlIG5ldyBsb2cgZW50cmllcy4KZGlmZiAtLWNoYW5nZWQtZ3JvdXAtZm9ybWF0PSclPicgLS11bmNoYW5nZWQtZ3JvdXAtZm9ybWF0PScnICRMT0dfRklMRSB0b2RheS5sb2cgPiBuZXcubG9nCgojIEFwcGVuZCB0aGUgbmV3IGxvZyBlbnRyaWVzIHRvIHRoZSBsb2cgZmlsZSBmb3IgdG9kYXkuCmNhdCBuZXcubG9nID4+ICRMT0dfRklMRQoKIyBDb21wcmVzcyB0aGUgdXBkYXRlZCBsb2cgZmlsZS4KZ3ppcCAuLyR7TE9HX0ZJTEV9CgojIENvcHkgdGhlIHVwZGF0ZWQsIGNvbXByZXNzZWQgbG9nIGZpbGUgYmFjayB0byBTMy4KYXdzIHMzIGNwIC4vJHtMT0dfRklMRX0uZ3ogczM6Ly8ke0xPR1NfUzNfQlVDS0VUfS8ke0xPR1NfUzNfRk9MREVSfS8ke0xPR19GSUxFfS5neiAtLXF1aWV0CgojIENsZWFuIHVwLgpybSB0b2RheS5sb2cgbmV3LmxvZyAke0xPR19GSUxFfS5nego=" | base64 -d - > bin/upload_logs_to_s3.sh
-
-  mounts:
-    tmp:
-      source: local
-      source_path: tmp
-
-  disk: 1024
-
-  size: S
-  resources:
-    base_memory: 768
-    memory_ratio: 512
-    # Memory allocation: 768 + (0.5 * 512) = 1024
-
-  crons:
     upload_logs_to_s3:
       # This is run hourly at 54 minutes after the hour, since platform.sh can
       # delay cron runs by up to 300 seconds.
