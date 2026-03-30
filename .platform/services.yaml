@@ -17,7 +17,6 @@ db:
           main: ro
 varnish:
   type: varnish:7.6
-  size: M
   relationships:
     drupal: 'drupal8:http'
   configuration:
