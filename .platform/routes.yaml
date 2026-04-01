@@ -10,8 +10,8 @@
   redirects:
     expires: 300s
     paths:
-      '^/(sites/(default|ilr\.cornell\.edu)/files/.*\.pdf)$':
-        to: 'https://archive.{default}/download-lookup?path=$1'
+      '^/sites/(default|ilr\.cornell\.edu)/files/(.*\.pdf)$':
+        to: 'https://{default}/sites/default/files-d8/$2'
         regexp: true
       '/about-ilr/faculty-and-staff-resources':
         to: 'https://{default}/faculty-and-staff-resources'
