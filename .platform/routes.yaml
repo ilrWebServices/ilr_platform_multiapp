@@ -55,10 +55,8 @@
     enabled: false
 
 "https://archive.{default}/":
-  type: upstream
-  upstream: varnish:http
-  cache:
-    enabled: false
+  type: redirect
+  to: https://www.{default}/
 
 "https://brand.{default}/":
   type: redirect
