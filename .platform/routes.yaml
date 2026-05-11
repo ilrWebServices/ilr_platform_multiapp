@@ -50,7 +50,7 @@
 
 "https://execed.{default}/":
   type: upstream
-  upstream: "drupal8:http"
+  upstream: "varnish:http"
   cache:
     enabled: false
 
@@ -65,7 +65,7 @@
 # Summer debate camp. Further redirects are handled in Drupal.
 "https://summerdebatecamp.cornell.edu":
   type: upstream
-  upstream: "drupal8:http"
+  upstream: "varnish:http"
   cache:
     enabled: false
 "http://*.summerdebatecamp.cornell.edu/":
@@ -75,7 +75,7 @@
 # Legacy Forensics site. Further redirects are handled in Drupal.
 "https://forensics.cornell.edu":
   type: upstream
-  upstream: "drupal8:http"
+  upstream: "varnish:http"
   cache:
     enabled: false
 "http://*.forensics.cornell.edu/":
