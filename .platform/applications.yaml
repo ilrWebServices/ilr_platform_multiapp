@@ -160,8 +160,8 @@ drupal8:
       spec: '0 23 * * *'
       cmd: 'echo "VACUUM;" | sqlite3 /app/data/dblog.sqlite'
     grist-link-log-cleanup:
-      # Run script to remove old entries from the Grist link log db @ 10pm every Friday.
-      spec: '0 22 * * 5'
+      # Run script to remove old entries from the Grist link log db @ 10pm every day.
+      spec: '0 22 * * *'
       cmd: 'php /app/scripts/grist_link_log_purge.php'
     upload_logs_to_s3:
       # This is run hourly at 54 minutes after the hour, since platform.sh can
