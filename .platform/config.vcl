@@ -23,8 +23,13 @@ sub vcl_recv {
     #     return (synth(429, "Too Many Requests"));
     # }
 
-    # Throttle all requests to the CAHRS resource library to 1 every second.
-    if (req.url ~ "^/cahrs/research-and-insights/resource-library" && vsthrottle.is_denied("/cahrs/research-and-insights/resource-library", 1, 1s)) {
+    # Throttle all requests to the CAHRS resource library to 2 every second.
+    if (req.url ~ "^/cahrs/research-and-insights/resource-library" && vsthrottle.is_denied("/cahrs/research-and-insights/resource-library", 2, 1s)) {
+        return (synth(429, "Too Many Requests"));
+    }
+
+    # Throttle all requests to the CAHRS HRBP resource library to 2 every second.
+    if (req.url ~ "hrbp-framework-resources$" && vsthrottle.is_denied("cahrs-hrbp-framework-resources", 2, 1s)) {
         return (synth(429, "Too Many Requests"));
     }
 
