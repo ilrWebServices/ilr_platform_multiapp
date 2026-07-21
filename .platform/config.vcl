@@ -17,11 +17,11 @@ sub vcl_recv {
     #     return (synth(429, "Too Many Requests"));
     # }
 
-    # If a client has exceeded 3 CAHRS resource library requests in 10 seconds,
-    # block them for 60 seconds.
-    # if (req.url ~ "^/cahrs/research-and-insights/resource-library" && vsthrottle.is_denied(req.http.X-Client-IP, 3, 10s, 60s)) {
-    #     return (synth(429, "Too Many Requests"));
-    # }
+    # If a client has exceeded 2 CAHRS resource library requests in 1 second,
+    # block them for 10 seconds.
+    if (req.url ~ "^/cahrs/research-and-insights/resource-library" && vsthrottle.is_denied(req.http.X-Client-IP, 2, 1s, 10s)) {
+        return (synth(429, "Too Many Requests"));
+    }
 
     # Throttle all requests to the CAHRS resource library to 2 every second.
     if (req.url ~ "^/cahrs/research-and-insights/resource-library" && vsthrottle.is_denied("/cahrs/research-and-insights/resource-library", 2, 1s)) {
