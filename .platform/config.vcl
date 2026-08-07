@@ -3,9 +3,10 @@ import vsthrottle;
 sub vcl_recv {
     set req.backend_hint = drupal.backend();
 
-    # Block IP addresses with an abuse score of 10 or more.
+    # Block IP addresses with an abuse score of 25 or more.
     # @see https://fixed.docs.upsun.com/development/headers.html#classification-data-headers
-    if ( std.integer(req.http.Client-Abuse-Score, 0) >= 10 ) {
+    # @see https://www.abuseipdb.com
+    if ( std.integer(req.http.Client-Abuse-Score, 0) >= 25 ) {
         return (synth(403, "Forbidden"));
     }
 
@@ -45,4 +46,12 @@ sub vcl_recv {
 
     # Bypass the cache. We'll enable it later, when we've configured the Purge module for Drupal.
     return (pass);
+}
+
+sub vcl_synth {
+    if (resp.status == 403 && req.http.Client-Abuse-Score) {
+        set resp.http.X-Blocked-Reason = "abuse-score";
+        set resp.http.X-Abuse-Score = req.http.Client-Abuse-Score;
+        set resp.reason = "Forbidden - Abuse Score";
+    }
 }
