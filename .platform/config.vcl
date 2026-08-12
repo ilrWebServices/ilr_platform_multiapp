@@ -50,8 +50,6 @@ sub vcl_recv {
 
 sub vcl_synth {
     if (resp.status == 403 && req.http.Client-Abuse-Score) {
-        set resp.http.X-Blocked-Reason = "abuse-score";
-        set resp.http.X-Abuse-Score = req.http.Client-Abuse-Score;
         set resp.reason = "Forbidden - Abuse Score";
     }
 }
