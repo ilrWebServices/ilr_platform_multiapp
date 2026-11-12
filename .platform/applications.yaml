@@ -171,3 +171,7 @@ drupal8:
         if [ "$PLATFORM_BRANCH" = master ]; then
           bash scripts/upload_logs_to_s3.sh
         fi
+    generate-sitemap:
+      # Run every day at 3:00.
+      spec: '0 3 * * *'
+      cmd: 'drush simple-sitemap:generate'
