@@ -34,12 +34,14 @@ sub vcl_recv {
         return (synth(429, "Too Many Requests"));
     }
 
-    # Intercept known attack vector URLs before the main Drupal app.
+    # Intercept known attack vector URLs before the main Drupal app. Include all
+    # requests to the old CAHRS resource library facet filters (`f(\[|%5B)...`).
     if (req.url ~ "^/wp-"
         || req.url ~ "^/Documents\$"
         || req.url ~ "^/Managed\$"
         || req.url ~ "^/\.env"
         || req.url ~ "^/api/server/version"
+        || req.url ~ "f(\[|%5B)\d(\]|%5D)="
     ) {
         return(synth(404));
     }
