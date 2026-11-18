@@ -10,6 +10,18 @@ sub vcl_recv {
         return (synth(403, "Forbidden"));
     }
 
+    # Intercept known attack vector URLs before the main Drupal app. Include all
+    # requests to the old CAHRS resource library facet filters (`f(\[|%5B)...`).
+    if (req.url ~ "^/wp-"
+        || req.url ~ "^/Documents\$"
+        || req.url ~ "^/Managed\$"
+        || req.url ~ "^/\.env"
+        || req.url ~ "^/api/server/version"
+        || req.url ~ "f(\[|%5B)\d(\]|%5D)="
+    ) {
+        return(synth(404));
+    }
+
     # The Platform.sh router provides the real client IP as the `X-Client-IP`
     # header. This replaces client.identity in other implementations.
     # If a client has exceeded 10 page requests in 15 seconds, block them for
@@ -32,16 +44,6 @@ sub vcl_recv {
     # Throttle all requests to the CAHRS HRBP resource library to 2 every second.
     if (req.url ~ "hrbp-framework-resources$" && vsthrottle.is_denied("cahrs-hrbp-framework-resources", 2, 1s)) {
         return (synth(429, "Too Many Requests"));
-    }
-
-    # Intercept known attack vector URLs before the main Drupal app.
-    if (req.url ~ "^/wp-"
-        || req.url ~ "^/Documents\$"
-        || req.url ~ "^/Managed\$"
-        || req.url ~ "^/\.env"
-        || req.url ~ "^/api/server/version"
-    ) {
-        return(synth(404));
     }
 
     # Bypass the cache. We'll enable it later, when we've configured the Purge module for Drupal.
